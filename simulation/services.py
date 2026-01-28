@@ -52,14 +52,18 @@ def send_campaign_emails(campaign_id, request=None):
             subject = "Alerta de seguridad crítica"
             message_body = f"""
             <div style="font-family: Arial, sans-serif; max-width: 600px; border: 1px solid #ddd; border-radius: 8px;">
-                <div style="padding: 20px; text-align: center;"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" height="24"></div>
+                <div style="padding: 20px; text-align: center;">
+                    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" height="32" alt="Google">
+                </div>
                 <div style="padding: 20px;">
-                    <h2 style="color: #d93025; text-align: center;">Alerta de seguridad crítica</h2>
-                    <div style="text-align: center;"><img src="https://ssl.gstatic.com/accounts/static/_/images/security_alert_red.png" height="64"></div>
-                    <p>Hola, {target.first_name}:</p>
-                    <p style="text-align: center;">Alguien conoce tu contraseña</p>
-                    <div style="text-align: center; margin: 30px 0;">
-                        <a href="{tracking_link}" style="background-color: #1a73e8; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">Comprobar actividad</a>
+                    <h2 style="color: #d93025; text-align: center; font-weight: normal; margin-bottom: 30px;">Alerta de seguridad crítica</h2>
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <img src="https://www.gstatic.com/images/icons/material/system/2x/warning_amber_24dp.png" height="48" alt="Alerta" style="filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);">
+                    </div>
+                    <p style="font-size: 16px;">Hola, {target.first_name}:</p>
+                    <p style="text-align: center; font-size: 18px; margin: 30px 0;">Alguien conoce tu contraseña</p>
+                    <div style="text-align: center; margin: 40px 0;">
+                        <a href="{tracking_link}" style="background-color: #d93025; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px;">Comprobar actividad</a>
                     </div>
                 </div>
             </div>
