@@ -48,7 +48,7 @@ security_awareness_platform/
 │   ├── views.py         # Cálculo de KPIs y Dashboard
 │   └── templates/       # Vistas de gráficos y reportes PDF
 └── db.sqlite3           # Base de datos (No almacena passwords)
-
+```
 ### 4.2 Mapa de Rutas (Endpoints)
 La arquitectura de direccionamiento se divide en dos zonas lógicas: la zona de administración (Atacante) y la zona de simulación (Víctima).
 
