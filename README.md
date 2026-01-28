@@ -119,11 +119,64 @@ Para ilustrar la interacción entre los actores y el sistema, presentamos los si
 ### 7.1 Vista del Atacante (Operador del Sistema)
 Este flujo describe el ciclo de vida de la operación desde la perspectiva del 'Red Team' o administrador de seguridad. El proceso comienza con la configuración estratégica de la campaña en el panel de control, donde se selecciona la identidad a suplantar (Microsoft, Google, etc.). A continuación, el sistema actúa como un servidor de Comando y Control (C2), orquestando el envío masivo de correos mediante un despachador SMTP asíncrono. Finalmente, el ciclo se cierra con la vigilancia activa: el administrador monitorea en tiempo real quién ha caído en la trampa, permitiendo una evaluación instantánea de la postura de seguridad de la organización sin intervención manual.
 
+```mermaid
+sequenceDiagram
+    actor Admin as Administrador (Atacante)
+    participant Panel as Panel de Admin
+    participant DB as Base de Datos
+    participant SMTP as Servicio SMTP
 
+    Admin->>Panel: 1. Crear Campaña (Tema: Microsoft)
+    activate Panel
+    Panel->>DB: Guardar Campaña
+    Admin->>Panel: 2. Seleccionar Objetivos (Targets)
+    Admin->>Panel: 3. Ejecutar 'Launch Campaign'
+    Panel->>SMTP: 4. Solicitar Envío Masivo
+    activate SMTP
+    SMTP->>SMTP: Generar Enlaces Únicos
+    SMTP-->>Panel: Confirmar Envíos
+    deactivate SMTP
+    Panel->>Admin: Mostrar "X Correos Enviados"
+    deactivate Panel
+
+    Admin->>Panel: 5. Monitorizar Dashboard
+    Panel->>DB: Consultar Métricas
+    DB-->>Panel: Retornar KPIs (Clicks/Submits)
+    Panel->>Admin: Visualizar Gráficos en Tiempo Real
+```
 
 ### 7.2 Vista de la Víctima (Usuario Final)
 Este diagrama ilustra la **"Kill Chain"** desde la perspectiva del usuario final. La experiencia está diseñada para ser indistinguible de un evento real hasta el último momento. El usuario recibe un correo técnicamente legítimo (pasando filtros básicos) que apela a su sentido de urgencia. Al interactuar con el enlace, el sistema registra silenciosamente la huella digital del evento (apertura). El punto crítico ocurre en el envío del formulario: el sistema intercepta las credenciales para validar el compromiso, pero aplica un protocolo de **"Privacidad por Diseño"** para descartarlas inmediatamente, redirigiendo al usuario a una intervención educativa positiva (*Teachable Moment*) que refuerza el aprendizaje mediante la experiencia directa.
 
+```mermaid
+sequenceDiagram
+    actor User as Víctima (Usuario)
+    participant Email as Cliente de Correo
+    participant Web as Servidor Web (Django)
+    participant Log as Log de Rastreo
+
+    User->>Email: 1. Recibe Correo de "Alerta"
+    User->>Email: 2. Hace Clic en Enlace
+    activate Email
+    Email->>Web: GET /track/uuid/
+    deactivate Email
+    activate Web
+    Web->>Log: Registrar 'Click' (Timestamp)
+    Web->>User: 3. Renderizar Página Falsa (Login)
+    deactivate Web
+
+    User->>Web: 4. Ingresa Credenciales y Envía
+    activate Web
+    Web->>Log: Registrar 'Data Submitted'
+    Note right of Web: ¡La contraseña es DESCARTADA aquí!
+    Web->>User: 5. Redirección Inmediata
+    deactivate Web
+
+    User->>Web: 6. Visualiza Página Educativa
+    activate Web
+    Web->>User: Mostrar Aviso: "Esto fue un simulacro"
+    deactivate Web
+```
 
 ## 8. Metodología de Validación
 
