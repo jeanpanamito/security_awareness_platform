@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Campaña - {{ campaign.name }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            padding: 40px;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #000;
+        }
+
+        .meta {
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            page-break-inside: avoid;
+        }
+
+        h2 {
+            border-left: 5px solid #0078d4;
+            padding-left: 15px;
+            color: #0078d4;
+        }
+
+        .grid {
+            display: flex;
+            gap: 20px;
+        }
+
+        .kpi {
+            flex: 1;
+            background: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .kpi-num {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .kpi-label {
+            text-transform: uppercase;
+            font-size: 0.8em;
+        }
+
+        .risk-high {
+            color: #dc3545;
+        }
+
+        .risk-med {
+            color: #ffc107;
+        }
+
+        .risk-low {
+            color: #28a745;
+        }
+
+        .chart-container {
+            height: 300px;
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="no-print" style="margin-bottom: 20px; text-align: right;">
+        <button onclick="window.print()"
+            style="padding: 10px 20px; cursor: pointer; background: #333; color: white; border: none;">🖨️ Imprimir /
+            Guardar como PDF</button>
+    </div>
+
+    <div class="header">
+        <h1>Informe Ejecutivo de Ciberseguridad</h1>
+        <div class="meta">Campaña: <strong>{{ campaign.name }}</strong> | Fecha: {{ campaign.created_at|date:"d F Y" }}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>1. Resumen Ejecutivo</h2>
+        <p>
+            El objetivo de este ejercicio fue evaluar la resiliencia de la organización frente a ataques de ingeniería
+            social.
+            Se simuló una campaña de phishing controlada dirigida a {{ total_targets }} usuarios.
+        </p>
+        <p>
+            <strong>Conclusión General:</strong>
+            {% if submit_rate > 20 %}
+            <span class="risk-high">RIESGO ALTO.</span> Una porción significativa de usuarios comprometió sus
+            credenciales. Se requiere capacitación urgente.
+            {% elif click_rate > 30 %}
+            <span class="risk-med">RIESGO MEDIO.</span> Aunque pocos enviaron datos, la tasa de interacción (clics) es
+            elevada.
+            {% else %}
+            <span class="risk-low">RIESGO BAJO.</span> La mayoría de usuarios identificó correctamente la amenaza.
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>2. Métricas Clave</h2>
+        <div class="grid">
+            <div class="kpi">
+                <div class="kpi-num">{{ total_targets }}</div>
+                <div class="kpi-label">Usuarios Evaluados</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-num risk-med">{{ click_rate }}%</div>
+                <div class="kpi-label">Tasa de Apertura</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-num risk-high">{{ submit_rate }}%</div>
+                <div class="kpi-label">Tasa de Compromiso</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3. Análisis Visual</h2>
+        <div class="chart-container">
+            <canvas id="reportChart"></canvas>
+        </div>
+        <script>
+            new Chart(document.getElementById('reportChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Usuarios Seguros', 'Hicieron Clic', 'Comprometidos'],
+                    datasets: [{
+                        data: [{{ chart_safe_count }}, {{ chart_clicked_only_count }}, {{ chart_compromised_count }}],
+                backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+                    }]
+                },
+                options: {
+                plugins: { legend: { position: 'bottom' } },
+                animation: false // Desactivar animación para impresión perfecta
+            }
+            });
+        </script>
+    </div>
+
+    <div class="section">
+        <h2>4. Recomendaciones</h2>
+        <ul>
+            <li>Reforzar la verificación de remitentes externos.</li>
+            <li>Implementar autenticación de múltiple factor (MFA) para mitigar el robo de credenciales.</li>
+            <li>Programar sesiones de capacitación para los departamentos con mayor tasa de incidencia.</li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 50px; font-size: 0.8em; color: #999;">
+        Generado automáticamente por Security Awareness Platform
+    </div>
+</body>
+
+</html>
